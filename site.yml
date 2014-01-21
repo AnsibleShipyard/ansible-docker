@@ -1,11 +1,7 @@
 ---
 #
-# playbook: ansible-mesos-docker
-# notes: based on executor install docs
-# depends:
-#   - ansible-mesos
-#   - ansible-marathon
-#   - ansible-docker
+# playbook: ansible-docker
+# notes: docker playbook
 #
 
 - hosts: all
