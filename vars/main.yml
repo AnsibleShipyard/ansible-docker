@@ -1,6 +1,16 @@
 ---
-docker_playbook_version: "0.1.1"
+docker_playbook_version: "0.1.2"
 
 # replace with gist variant
 docker_repo_key: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
 docker_repo: "http://get.docker.io/ubuntu"
+docker_opts: ''
+
+##### ---
+# Want to advertise the tcp port? Enable below.
+docker_listen_tcp: False
+docker_listen_port: 4243
+# All one needs is either to uncomment this, or override this var with 
+# your own values:
+# docker_opts: '"-H tcp://{{ansible_eth1.ipv4.address}}:{{docker_listen_port}}"'
+##### ---
