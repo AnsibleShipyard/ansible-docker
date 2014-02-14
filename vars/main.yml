@@ -8,9 +8,16 @@ docker_opts: ''
 
 ##### ---
 # Want to advertise the tcp port? Enable below.
+# To enable tcp you must set :
+#   - `docker_listen_tcp = True`
+#   - uncomment `docker_opts` or provide it as a override
+#
+# Note:
+#   By setting `-H` opt for docker, it will no longer be listenting
+#   on the socket. You cannot have both. You must choose socket `-d`
+#   or tcp `-H`.
+#
 docker_listen_tcp: False
 docker_listen_port: 4243
-# All one needs is either to uncomment this, or override this var with 
-# your own values:
 # docker_opts: '"-H tcp://{{ansible_eth1.ipv4.address}}:{{docker_listen_port}}"'
 ##### ---
