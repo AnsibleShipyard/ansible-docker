@@ -6,13 +6,18 @@
 - name: Add specific key
   command: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys {{docker_repo_key}}
 
+- name: Update
+  command: apt-get update
+
+- name: Install https apt transport package
+  command: apt-get install -y apt-transport-https
+
 - name: Add docker repo
   command: sudo sh -c "echo deb {{docker_repo}} docker main > /etc/apt/sources.list.d/docker.list"
 
-- name: Install os packages
+- name: Install lxc-docker package
   apt: pkg={{item}} state=present update_cache=yes
-  with_items: 
-    - linux-image-extra-{{os_uname.stdout}}
+  with_items:
     - lxc-docker
 
 - name: Docker default config file
