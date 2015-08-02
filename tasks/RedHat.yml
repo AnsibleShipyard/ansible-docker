@@ -4,5 +4,4 @@
  
 - name: Install Docker Engine
   yum: name=docker-engine state=present
-  
-  
+

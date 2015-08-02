@@ -31,4 +31,3 @@
   notify: 
     - Restart Docker
 
-  
