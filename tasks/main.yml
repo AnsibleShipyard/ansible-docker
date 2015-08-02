@@ -1,3 +1,17 @@
 ---
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Create docker group
+  group: name=docker state=present system=yes
+  when: docker_create_group
+  tags:
+    - config
+  
 - include: Debian.yml
   when: ansible_os_family == "Debian"
+  
+- include: RedHat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: init.yml

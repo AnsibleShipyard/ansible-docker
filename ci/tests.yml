@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  connection: local
+  sudo: yes
+  gather_facts: false
+  
+  tasks:
+    - command: docker run hello-world
+      register: status
+      failed_when: status.rc != 0

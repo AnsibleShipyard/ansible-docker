@@ -1,10 +1,8 @@
 ---
 docker_playbook_version: "0.1.2"
 
-# replace with gist variant
-docker_repo_key: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
-docker_repo: "https://get.docker.io/ubuntu"
 docker_opts: ''
+docker_create_group: true
 
 ##### ---
 # Want to advertise the tcp port? Enable below.
