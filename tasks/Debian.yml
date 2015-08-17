@@ -13,7 +13,7 @@
   command: apt-get install -y apt-transport-https
 
 - name: Add docker repo
-  command: sudo sh -c "echo deb {{docker_repo}} docker main > /etc/apt/sources.list.d/docker.list"
+  template: src=docker.list.j2 dest=/etc/apt/sources.list.d/docker.list
 
 - name: Install lxc-docker package
   apt: pkg={{item}} state=present update_cache=yes
