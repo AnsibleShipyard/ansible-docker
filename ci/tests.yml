@@ -4,8 +4,12 @@
   connection: local
   sudo: yes
   gather_facts: false
-  
+
   tasks:
-    - command: docker run hello-world
+    - name: Wait for Docker to be up
+      wait_for: path=/var/run/docker.sock state=started delay=3 timeout=5
+
+    - name: Test that Docker can run hello-world
+      command: docker run --rm hello-world
       register: status
       failed_when: status.rc != 0

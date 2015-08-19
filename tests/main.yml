@@ -8,7 +8,7 @@
     - name: Wait for Docker to be up
       wait_for: path=/var/run/docker.sock state=started delay=3 timeout=5
 
-    - name: Test for Docker status
-      command: docker ps
+    - name: Test that Docker can run hello-world
+      command: docker run --rm hello-world
       register: status
-      failed_when: "status.rc != 0"
+      failed_when: status.rc != 0
