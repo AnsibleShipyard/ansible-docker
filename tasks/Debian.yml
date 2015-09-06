@@ -2,15 +2,11 @@
   command: uname -r
   register: os_uname
 
-# would rather have used ansible apt-key...
 - name: Add specific key
-  command: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys {{docker_repo_key}}
-
-- name: Update
-  command: apt-get update
+  apt_key: id="{{docker_repo_key}}" keyserver=keyserver.ubuntu.com state=present
 
 - name: Install https apt transport package
-  command: apt-get install -y apt-transport-https
+  apt: pkg=apt-transport-https state=present update_cache=yes
 
 - name: Add docker repo
   template: src=docker.list.j2 dest=/etc/apt/sources.list.d/docker.list
