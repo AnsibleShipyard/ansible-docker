@@ -10,7 +10,7 @@
 
 - name: Add docker repo
   apt_repository:
-    repo: "{{ docker_repo }}"
+    repo: "deb {{ docker_repo }} docker main"
     state: present
 
 - name: Install https apt transport package
