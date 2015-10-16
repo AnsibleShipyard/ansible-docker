@@ -1,0 +1,18 @@
+machine:
+  pre:
+    - sudo apt-get update -qq
+    - sudo apt-get install curl -y
+
+dependencies:
+  pre:
+    - sudo pip install -U ansible
+  post:
+    - sudo echo '[defaults]' >> ansible.cfg
+    - sudo echo 'roles_path = ../' >> ansible.cfg
+
+test:
+  override:
+    - ansible-playbook -i ci/inventory ci/playbook.yml --syntax-check
+    - ansible-playbook -i ci/inventory ci/playbook.yml --connection=local --sudo -vvvv
+
+
