@@ -1,26 +1,17 @@
-- name: Get uname
-  command: uname -r
-  register: os_uname
-
-# would rather have used ansible apt-key...
+---
 - name: Add specific key
-  command: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys {{docker_repo_key}}
-
-- name: Update
-  command: apt-get update
+  apt_key: id={{docker_repo_key}} keyserver=keyserver.ubuntu.com state=present
 
 - name: Install https apt transport package
-  command: apt-get install -y apt-transport-https
+  apt: pkg=apt-transport-https state=present update_cache=yes
 
 - name: Add docker repo
-  command: sudo sh -c "echo deb {{docker_repo}} docker main > /etc/apt/sources.list.d/docker.list"
+  apt_repository: repo='deb {{ docker_repo }} docker main' state=present
 
 - name: Install lxc-docker package
-  apt: pkg={{item}} state=present update_cache=yes
-  with_items:
-    - lxc-docker
+  apt: pkg=lxc-docker state=present update_cache=yes
 
-# consider seperate role here
+# consider separate role here
 - name: Change ufw forward policy to ACCEPT
   command: sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
   when: docker_listen_tcp == True
@@ -29,6 +20,6 @@
   command: ufw reload
   when: docker_listen_tcp == True
 
-- name: Allow incomming tcp traffic on {{docker_listen_port}}
+- name: Allow incoming tcp traffic on {{docker_listen_port}}
   command: ufw allow {{docker_listen_port}}/tcp
   when: docker_listen_tcp == True
