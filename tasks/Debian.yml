@@ -2,19 +2,18 @@
   command: uname -r
   register: os_uname
 
+- name: Install https apt transport package
+  apt: pkg=apt-transport-https state=present update_cache=yes cache_valid_time=600
 - name: Add specific key
   apt_key:
     id: "{{docker_repo_key}}"
-    keyserver: keyserver.ubuntu.com
+    keyserver: hkp://pgp.mit.edu:80
     state: present
 
 - name: Add docker repo
   apt_repository:
-    repo: "deb {{ docker_repo }} docker main"
+    repo: "deb {{ docker_repo }} {{ ansible_lsb.id | lower}}-{{ ansible_lsb.codename | lower }} main"
     state: present
-
-- name: Install https apt transport package
-  apt: pkg=apt-transport-https state=present update_cache=yes cache_valid_time=600
 
 - name: Install lxc-docker package
   apt:
@@ -23,7 +22,7 @@
     update_cache: yes
     cache_valid_time: 600
   with_items:
-    - lxc-docker
+    - docker-engine
 
 # consider separate role here
 - name: Change ufw forward policy to ACCEPT

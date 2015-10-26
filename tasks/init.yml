@@ -1,33 +1,95 @@
 
+- name: create rsyslog.d
+  sudo: yes
+  file:
+    dest: /etc/rsyslog.d
+    state: directory
+  tags:
+    - docker
+    - bootstrap
+
+- name: create docker entry for syslogd
+  sudo: yes
+  copy:
+    dest: /etc/rsyslog.d/10-docker.conf
+    content: |
+      # Docker logging
+      :syslogtag, isequal, "docker:"  /var/log/docker/docker.log
+      & ~
+  notify:
+    - restart rsyslog
+  tags:
+    - docker
+    - bootstrap
+
 - name: Check if /etc/init exists
   stat: path=/etc/init/
   register: etc_init
 
+- name: Check if systemd exists
+  stat: path=/usr/lib/systemd/
+  register: systemd_check
+
 - name: Docker upstart default config file
   template: src=docker-defaults.j2 dest=/etc/default/docker
-  when: etc_init.stat.exists == true
+  when: etc_init.stat.exists == true and systemd_check.stat.exists == false
   notify: 
-    - Restart Docker
+    - restart docker
 
 - name: Docker init file
   template: src=docker-init.j2 dest=/etc/init/docker.conf
-  when: etc_init.stat.exists == true
+  when: etc_init.stat.exists == true and systemd_check.stat.exists == false
   notify: 
-    - Restart Docker
+    - restart docker
 
-- name: Check if systemd exists
-  stat: path=/usr/lib/systemd/system/
-  register: systemd_check
+- name: create /etc/sysconfig
+  sudo: yes
+  file:
+    dest: /etc/sysconfig
+    state: directory
+  tags:
+    - docker
 
 - name: Docker systemd default config file
   template: src=docker-sysconfig.j2 dest=/etc/sysconfig/docker
   when: systemd_check.stat.exists == true
   notify: 
-    - Restart Docker
+    - restart docker
 
 - name: Docker systemd file
   template: src=docker-service.j2 dest=/lib/systemd/system/docker.service backup=yes
   when: systemd_check.stat.exists == true
   notify: 
-    - Restart Docker
+    - restart docker
 
+- name: create docker.system.d
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/docker.service.d
+    state: directory
+  tags:
+    - docker
+
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/docker.service.d/local.conf
+    content: |
+      [Service]
+      EnvironmentFile=-/etc/sysconfig/docker
+      ExecStart=
+      ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+  notify:
+    - reload docker
+  tags:
+    - docker
+
+- name: enable docker
+  sudo: yes
+  service:
+    name: docker
+    enabled: yes
+    state: started
+  tags:
+    - docker
+    - bootstrap # needed to install Docker images during bootstrap
