@@ -15,7 +15,7 @@
     repo: "deb {{ docker_repo }} {{ ansible_lsb.id | lower}}-{{ ansible_lsb.codename | lower }} main"
     state: present
 
-- name: Install lxc-docker package
+- name: Install docker-engine package
   apt:
     pkg: "{{item}}"
     state: present
