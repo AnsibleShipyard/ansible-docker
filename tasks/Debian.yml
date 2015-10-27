@@ -1,7 +1,7 @@
 - name: Get uname
   command: uname -r
   register: os_uname
-  change_when: False
+  changed_when: False
 
 - name: Install https apt transport package
   apt: pkg=apt-transport-https state=present update_cache=yes cache_valid_time=600
