@@ -79,6 +79,7 @@
       EnvironmentFile=-/etc/sysconfig/docker
       ExecStart=
       ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+  when: systemd_check.stat.exists == true
   notify:
     - reload docker
   tags:
