@@ -9,7 +9,10 @@ Requires=docker.socket
 [Service]
 Type=notify
 EnvironmentFile=-/etc/sysconfig/docker
-ExecStart=/usr/bin/docker -d -H fd://
+ExecStart=/usr/bin/docker -d -H fd:// $OPTIONS
+{% if docker_service_start_timeout != '' %}
+TimeoutStartSec={{ docker_service_start_timeout }}
+{% endif %}
 MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
