@@ -1,24 +1,26 @@
-- name: Get uname
-  command: uname -r
-  register: os_uname
 
-# would rather have used ansible apt-key...
 - name: Add specific key
-  command: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys {{docker_repo_key}}
-
-- name: Update
-  command: apt-get update
-
-- name: Install https apt transport package
-  command: apt-get install -y apt-transport-https
+  apt_key: keyserver={{docker_repo_key_server}} id={{docker_repo_key}}
 
 - name: Add docker repo
-  command: sudo sh -c "echo deb {{docker_repo}} docker main > /etc/apt/sources.list.d/docker.list"
+  apt_repository: repo='deb {{docker_repo}} ubuntu-{{ansible_distribution_release}} main' state=present
 
-- name: Install lxc-docker package
-  apt: pkg={{item}} state=present update_cache=yes
-  with_items:
-    - lxc-docker
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Purge the old repo if it exists
+  apt: name=lxc-docker* purge=yes 
+  ignore_errors: yes
+
+- name: Verify that apt is pulling from the right repository
+  command: apt-cache policy docker-engine
+
+- name: Install the recommended package
+  apt: name=linux-image-extra-{{ansible_kernel}} state=present
+  when: docker_install_recommended_package
+
+- name: Install Docker
+  apt: name=docker-engine state=present update_cache=yes
 
 # consider seperate role here
 - name: Change ufw forward policy to ACCEPT

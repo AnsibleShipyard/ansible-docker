@@ -24,7 +24,7 @@
   when: systemd_check.stat.exists == true
   notify: 
     - Restart Docker
-  
+
 - name: Docker systemd file
   template: src=docker-service.j2 dest=/lib/systemd/system/docker.service backup=yes
   when: systemd_check.stat.exists == true
