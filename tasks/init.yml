@@ -27,7 +27,7 @@
   register: etc_init
 
 - name: Check if systemd exists
-  stat: path=/usr/lib/systemd/
+  stat: path=/usr/lib/systemd/system/
   register: systemd_check
 
 - name: Docker upstart default config file
