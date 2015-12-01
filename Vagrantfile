@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     c.vm.box = "precise-server-cloudimg-amd64-vagrant-disk1"
     c.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
     c.vm.provision "shell" do |s|
-      s.inline = "apt-get update -y; apt-get install python-software-properties; add-apt-repository ppa:rquillo/ansible; apt-get update -y; apt-get install ansible -y"
+      s.inline = "apt-get update -y; apt-get install python-software-properties; add-apt-repository ppa:rquillo/ansible; apt-get update -y; apt-get install ansible -y; cd /home/vagrant/roles/ansible-docker/tests; ansible-playbook -i inventory playbook.yml"
       s.privileged = true
     end
   end
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     c.vm.box = "trusty-server-cloudimg-amd64-vagrant-disk1"
     c.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
     c.vm.provision "shell" do |s|
-      s.inline = "apt-get update -y; apt-get install -y software-properties-common; apt-add-repository ppa:ansible/ansible; apt-get update -y; apt-get install -y ansible"
+      s.inline = "apt-get update -y; apt-get install -y software-properties-common; apt-add-repository ppa:ansible/ansible; apt-get update -y; apt-get install -y ansible; cd /home/vagrant/roles/ansible-docker/tests; ansible-playbook -i inventory playbook.yml"
       s.privileged = true
     end
   end
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     c.vm.network "private_network", ip: "192.168.100.5"
     c.vm.box = "centos/7"
     c.vm.provision "shell" do |s|
-      s.inline = "yum install -y epel-release; yum install -y ansible"
+      s.inline = "yum install -y epel-release; yum install -y ansible; cd /home/vagrant/roles/ansible-docker/tests; ansible-playbook -i inventory playbook.yml"
       s.privileged = true
     end
   end
