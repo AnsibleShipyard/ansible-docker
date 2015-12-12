@@ -37,4 +37,24 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # Fedora 23:
+  config.vm.define 'fedora23' do |c|
+    c.vm.network "private_network", ip: "192.168.100.6"
+    c.vm.box = "fedora/23-cloud-base"
+    c.vm.provision "shell" do |s|
+      s.inline = "dnf install -y epel-release; dnf install -y ansible python-dnf"
+      s.privileged = true
+    end
+  end
+
+  # Oracle Linux 7.2:
+  config.vm.define 'oraclelinux72' do |c|
+    c.vm.network "private_network", ip: "192.168.100.7"
+    c.vm.box = "box-cutter/ol72"
+    c.vm.provision "shell" do |s|
+      s.inline = "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm; yum install -y ansible"
+      s.privileged = true
+    end
+  end
+
 end

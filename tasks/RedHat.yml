@@ -1,7 +1,20 @@
 
 - name: Install Docker Repository
   template: src=docker-repo.j2 dest=/etc/yum.repos.d/docker.repo
+
+- name: (yum) Install SELinux python bindings
+  yum: name=libselinux-python state=present
+  when: ansible_selinux is defined and ansible_pkg_mgr == 'yum'
  
-- name: Install Docker Engine
+- name: (yum) Install Docker Engine
   yum: name=docker-engine state=present
+  when: ansible_pkg_mgr == 'yum'
+
+- name: (dnf) Install SELinux python bindings
+  dnf: name=libselinux-python state=present
+  when: ansible_selinux is defined and ansible_pkg_mgr == 'dnf'
+  
+- name: (dnf) Install Docker Engine
+  dnf: name=docker-engine state=present
+  when: ansible_pkg_mgr == 'dnf'
 
