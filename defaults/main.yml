@@ -1,5 +1,7 @@
 ---
-docker_playbook_version: "0.1.2"
+# RedHat: Docker yum repository URL
+docker_yum_repo: "https://yum.dockerproject.org/repo/main/{{ ansible_distribution | lower }}/{{ os_version_major }}"
+docker_yum_repo_gpg: 'https://yum.dockerproject.org/gpg'
 
 docker_opts: ''
 docker_create_group: true
@@ -12,7 +14,7 @@ docker_service_start_timeout: ''    # use system default value
 #   - uncomment `docker_opts` or provide it as a override
 #
 # Note:
-#   By setting `-H` opt for docker, it will no longer be listenting
+#   By setting `-H` opt for docker, it will no longer be listening
 #   on the socket. You cannot have both. You must choose socket `-d`
 #   or tcp `-H`.
 #
