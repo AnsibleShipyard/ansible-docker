@@ -7,11 +7,17 @@
   when: docker_create_group
   tags:
     - config
-  
+
+- name: Create the docker group and add your user
+  command: usermod -aG docker {{ansible_ssh_user}}
+  when: docker_create_group
+  tags:
+    - config
+
 - include: Debian.yml
   when: ansible_os_family == "Debian"
-  
+
 - include: RedHat.yml
   when: ansible_os_family == "RedHat"
 
-- include: init.yml
+# - include: init.yml

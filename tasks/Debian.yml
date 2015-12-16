@@ -1,15 +1,26 @@
----
-- name: Add specific key
-  apt_key: id={{docker_repo_key}} keyserver=keyserver.ubuntu.com state=present
 
-- name: Install https apt transport package
-  apt: pkg=apt-transport-https state=present update_cache=yes
+- name: Add specific key
+  apt_key: keyserver={{docker_repo_key_server}} id={{docker_repo_key}}
 
 - name: Add docker repo
-  apt_repository: repo='deb {{ docker_repo }} docker main' state=present
+  apt_repository: repo='deb {{docker_repo}} ubuntu-{{ansible_distribution_release}} main' state=present
 
-- name: Install lxc-docker package
-  apt: pkg=lxc-docker state=present update_cache=yes
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Purge the old repo if it exists
+  apt: name=lxc-docker* purge=yes 
+  ignore_errors: yes
+
+- name: Verify that apt is pulling from the right repository
+  command: apt-cache policy docker-engine
+
+- name: Install the recommended package
+  apt: name=linux-image-extra-{{ansible_kernel}} state=present
+  when: docker_install_recommended_package
+
+- name: Install Docker
+  apt: name=docker-engine state=present update_cache=yes
 
 # consider separate role here
 - name: Change ufw forward policy to ACCEPT
