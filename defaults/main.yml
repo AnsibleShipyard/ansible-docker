@@ -1,6 +1,7 @@
 ---
 # RedHat: Docker yum repository URL
-docker_yum_repo: "https://yum.dockerproject.org/repo/main/{{ ansible_distribution | lower }}/{{ os_version_major }}"
+docker_yum_repo: "https://yum.dockerproject.org/repo/main/{{ ansible_distribution | lower }}/$releasever/"
+
 docker_yum_repo_gpg: 'https://yum.dockerproject.org/gpg'
 
 docker_opts: ''
