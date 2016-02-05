@@ -9,7 +9,7 @@
   apt_repository: repo='deb {{ docker_repo }} docker main' state=present
 
 - name: Install lxc-docker package
-  apt: pkg=lxc-docker state=present update_cache=yes
+  apt: pkg={{ docker_apt_package }} state=present update_cache=yes
 
 # consider separate role here
 - name: Change ufw forward policy to ACCEPT
