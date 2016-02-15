@@ -1,15 +1,9 @@
-- name: Get uname
-  command: uname -r
-  register: os_uname
-  changed_when: False
+---
+- name: Add specific key
+  apt_key: id={{docker_repo_key}} keyserver=keyserver.ubuntu.com state=present
 
 - name: Install https apt transport package
-  apt: pkg=apt-transport-https state=present update_cache=yes cache_valid_time=600
-- name: Add specific key
-  apt_key:
-    id: "{{docker_repo_key}}"
-    keyserver: hkp://pgp.mit.edu:80
-    state: present
+  apt: pkg=apt-transport-https state=present update_cache=yes
 
 - name: Add docker repo
   apt_repository:
@@ -34,6 +28,6 @@
   command: ufw reload
   when: docker_listen_tcp == True
 
-- name: Allow incomming tcp traffic on {{docker_listen_port}}
+- name: Allow incoming tcp traffic on {{docker_listen_port}}
   command: ufw allow {{docker_listen_port}}/tcp
   when: docker_listen_tcp == True
