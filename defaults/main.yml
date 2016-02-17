@@ -1,7 +1,21 @@
 ---
-# RedHat: Docker yum repository URL
-docker_yum_repo: "https://yum.dockerproject.org/repo/main/{{ ansible_distribution | lower }}/{{ os_version_major }}"
+# Empty version so latest is picked by default. See below.
+# Provide value to install a specific version. For example:
+#  for Debian system, 1.9.0-1
+#  for RedHat system, 1.10
+docker_version:
+
+# Debian:
+docker_apt_package: "lxc-docker{{ '=' + docker_version if docker_version else '' }}"
+
+# RedHat:
+docker_yum_repo_url: "https://yum.dockerproject.org/repo/main"
+docker_yum_repo: "{{ docker_yum_repo_url }}/{{ docker_yum_repo_uris[ansible_distribution] }}"
 docker_yum_repo_gpg: 'https://yum.dockerproject.org/gpg'
+docker_yum_package: "docker-engine{{ '-' + docker_version if docker_version else '' }}"
+
+# Prior to 1.9, starting Docker engine as daemon use flag '-d' was used, now it's 'daemon' argument
+docker_daemon_opts: "{{ 'daemon' if docker_version == '' or docker_version | version_compare('1.9', '>=') else '-d' }}{{ ' -H fd://' if ansible_os_family == 'RedHat' else ''}}"
 
 docker_opts: ''
 docker_create_group: true

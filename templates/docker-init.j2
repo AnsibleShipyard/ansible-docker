@@ -8,5 +8,5 @@ respawn
 
 script
   [ ! -f /etc/default/docker ] || . /etc/default/docker
-  /usr/bin/docker -d $DOCKER_OPTS
+  /usr/bin/docker {{ docker_daemon_opts }} $DOCKER_OPTS
 end script

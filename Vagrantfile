@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     c.vm.box = "precise-server-cloudimg-amd64-vagrant-disk1"
     c.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
     c.vm.provision "shell" do |s|
-      s.inline = "apt-get update -y; apt-get install python-software-properties; add-apt-repository ppa:rquillo/ansible; apt-get update -y; apt-get install ansible -y"
+      s.inline = "apt-get update -y; apt-get install python-software-properties; apt-add-repository -y ppa:ansible/ansible; apt-get update -y; apt-get install ansible -y"
       s.privileged = true
     end
   end
@@ -33,6 +33,26 @@ Vagrant.configure("2") do |config|
     c.vm.box = "centos/7"
     c.vm.provision "shell" do |s|
       s.inline = "yum install -y epel-release; yum install -y ansible"
+      s.privileged = true
+    end
+  end
+
+  # Fedora 23:
+  config.vm.define 'fedora23' do |c|
+    c.vm.network "private_network", ip: "192.168.100.6"
+    c.vm.box = "fedora/23-cloud-base"
+    c.vm.provision "shell" do |s|
+      s.inline = "dnf install -y epel-release; dnf install -y ansible python-dnf"
+      s.privileged = true
+    end
+  end
+
+  # Oracle Linux 7.2:
+  config.vm.define 'oraclelinux72' do |c|
+    c.vm.network "private_network", ip: "192.168.100.7"
+    c.vm.box = "box-cutter/ol72"
+    c.vm.provision "shell" do |s|
+      s.inline = "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm; yum install -y ansible"
       s.privileged = true
     end
   end
