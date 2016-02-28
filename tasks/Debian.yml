@@ -1,9 +1,10 @@
 ---
 - name: Add specific key
   apt_key: id={{docker_repo_key}} keyserver=keyserver.ubuntu.com state=present
+  register: apt_key_status
 
 - name: Install https apt transport package
-  apt: pkg=apt-transport-https state=present update_cache=yes
+  apt: pkg=apt-transport-https state=present update_cache={{ apt_key_status|changed }}
 
 - name: Add docker repo
   apt_repository:
