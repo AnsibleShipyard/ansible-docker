@@ -1,6 +1,7 @@
 
 - name: Install Docker Repository
   template: src=docker-repo.j2 dest=/etc/yum.repos.d/docker.repo
+  when: docker_yum_install_repo == yes
 
 - name: (yum) Install SELinux python bindings
   yum: name=libselinux-python state=present
