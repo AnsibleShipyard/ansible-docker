@@ -1,6 +1,6 @@
 
 - name: create rsyslog.d
-  sudo: yes
+  become: yes
   file:
     dest: /etc/rsyslog.d
     state: directory
@@ -9,7 +9,7 @@
     - bootstrap
 
 - name: create docker entry for syslogd
-  sudo: yes
+  become: yes
   copy:
     dest: /etc/rsyslog.d/10-docker.conf
     content: |
@@ -27,23 +27,23 @@
   register: etc_init
 
 - name: Check if systemd exists
-  stat: path=/usr/lib/systemd/system/
+  stat: path=/bin/systemctl
   register: systemd_check
 
 - name: Docker upstart default config file
   template: src=docker-defaults.j2 dest=/etc/default/docker
   when: etc_init.stat.exists == true and systemd_check.stat.exists == false
-  notify: 
+  notify:
     - restart docker
 
 - name: Docker init file
   template: src=docker-init.j2 dest=/etc/init/docker.conf
   when: etc_init.stat.exists == true and systemd_check.stat.exists == false
-  notify: 
+  notify:
     - restart docker
 
 - name: create /etc/sysconfig
-  sudo: yes
+  become: yes
   file:
     dest: /etc/sysconfig
     state: directory
@@ -53,17 +53,18 @@
 - name: Docker systemd default config file
   template: src=docker-sysconfig.j2 dest=/etc/sysconfig/docker
   when: systemd_check.stat.exists == true
-  notify: 
+  notify:
     - restart docker
 
 - name: Docker systemd file
   template: src=docker-service.j2 dest=/lib/systemd/system/docker.service backup=yes
   when: systemd_check.stat.exists == true
-  notify: 
+  notify:
+    - reload docker
     - restart docker
 
 - name: create docker.system.d
-  sudo: yes
+  become: yes
   file:
     dest: /etc/systemd/system/docker.service.d
     state: directory
@@ -71,14 +72,14 @@
     - docker
 
 - name: create local docker service override
-  sudo: yes
+  become: yes
   copy:
     dest: /etc/systemd/system/docker.service.d/local.conf
     content: |
       [Service]
       EnvironmentFile=-/etc/sysconfig/docker
       ExecStart=
-      ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+      ExecStart=/usr/bin/docker daemon -H fd:// $other_arg
   when: systemd_check.stat.exists == true
   notify:
     - reload docker
@@ -86,7 +87,7 @@
     - docker
 
 - name: enable docker
-  sudo: yes
+  become: yes
   service:
     name: docker
     enabled: yes

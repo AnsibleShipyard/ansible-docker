@@ -9,7 +9,7 @@ Requires=docker.socket
 [Service]
 Type=notify
 EnvironmentFile=-/etc/sysconfig/docker
-ExecStart=/usr/bin/docker daemon-H fd:// $OPTIONS
+ExecStart=/usr/bin/docker daemon -H fd:// $OPTIONS
 {% if docker_service_start_timeout != '' %}
 TimeoutStartSec={{ docker_service_start_timeout }}
 {% endif %}
