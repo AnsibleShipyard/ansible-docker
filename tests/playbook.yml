@@ -5,10 +5,9 @@
 
 - hosts: localhost
   connection: local
-  sudo: yes
+  become: yes
 
   roles:
     - {role: ../../}
 
 - include: main.yml
-

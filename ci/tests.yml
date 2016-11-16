@@ -2,7 +2,7 @@
 
 - hosts: localhost
   connection: local
-  sudo: yes
+  become: yes
   gather_facts: false
 
   tasks:
@@ -13,3 +13,4 @@
       command: docker run --rm hello-world
       register: status
       failed_when: status.rc != 0
+      changed_when: false

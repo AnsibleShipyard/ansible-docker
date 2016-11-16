@@ -2,7 +2,7 @@
 
 - hosts: localhost
   connection: local
-  sudo: yes
+  become: yes
 
   tasks:
     - name: Wait for Docker to be up
@@ -12,3 +12,4 @@
       command: docker run --rm hello-world
       register: status
       failed_when: status.rc != 0
+      changed_when: false

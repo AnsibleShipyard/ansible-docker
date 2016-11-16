@@ -1,19 +1,19 @@
 ---
 - name: restart docker
-  sudo: yes
+  become: yes
   service:
     name: docker
     state: restarted
     sleep: 5
 
 - name: restart rsyslog
-  sudo: yes
+  become: yes
   service:
     name: rsyslog
     state: restarted
 
 - name: reload docker
-  sudo: yes
+  become: yes
   command: systemctl daemon-reload
   notify:
     - restart docker
