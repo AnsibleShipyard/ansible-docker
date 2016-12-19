@@ -18,7 +18,7 @@
     update_cache: yes
     cache_valid_time: 600
   with_items:
-    - "docker-engine={{ docker_version }}-{{ docker_package_version }}~{{ ansible_lsb.codename | lower }}"
+    - "docker-engine={{ docker_version }}-{{ docker_package_version }}~{{ ansible_lsb.id | lower }}-{{ ansible_lsb.codename | lower }}"
 
 # consider separate role here
 - name: Change ufw forward policy to ACCEPT
